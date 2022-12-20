@@ -28,6 +28,7 @@ import com.udacity.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var linkToDownload: String
     private var downloadID: Long = 0
 
     private lateinit var notificationManager: NotificationManager
@@ -51,9 +52,9 @@ class MainActivity : AppCompatActivity() {
                 0 -> Snackbar.make(
                     binding.root, "Nothing selected", Snackbar.LENGTH_SHORT
                 ).show()
-                1 -> println("mustafa 1")
-                2 -> download()
-                3 -> println("mustafa 3")
+                1 -> download(Glide_Link)
+                2 -> download(URL_Project)
+                3 -> download(Retrofit_Link)
             }
 
         }
@@ -79,28 +80,43 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             val query = DownloadManager.Query()
-            if (id != null) {
-                query.setFilterById(id)
+            if (query != null) {
+                query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL or DownloadManager.STATUS_FAILED)
             }
 
-//                val downloadID =
-//                    downloadManager.query(query).getColumnIndex(DownloadManager.COLUMN_STATUS)
-//                        .getInt(downloadID) == DownloadManager.STATUS_SUCCESSFUL
+            val c = downloadManager.query(query)
+            if (c.moveToFirst()) {
+                var p = c.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                val s = c.getInt(p)
+                when (s) {
+                    DownloadManager.STATUS_SUCCESSFUL -> noti.sendNoti(
+                        linkToDownload,
+                        this@MainActivity,
+                        "Successful"
+                    )
+                    DownloadManager.STATUS_FAILED -> noti.sendNoti(
+                        linkToDownload,
+                        this@MainActivity,
+                        "Failed"
+                    )
+                }
 
-//                }
+
+            }
 
         }
     }
 
-    private fun download() {
+    private fun download(link: String) {
+        linkToDownload = link
         val request =
-            DownloadManager.Request(Uri.parse(URL))
+            DownloadManager.Request(Uri.parse(link))
                 .setTitle(getString(R.string.app_name))
                 .setDescription(getString(R.string.app_description)).setRequiresCharging(false)
                 .setAllowedOverMetered(true).setAllowedOverRoaming(true)
                 .setDestinationInExternalPublicDir(
                     Environment.DIRECTORY_DOWNLOADS,
-                    getString(R.string.app_name)
+                    link
                 )
 //            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
 
@@ -108,12 +124,13 @@ class MainActivity : AppCompatActivity() {
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        noti.sendNoti(URL, this@MainActivity)
 //        binding.contentMainView.customButton.setBackgroundColor(Color.YELLOW)
     }
 
     companion object {
-        private const val URL =
+        private const val Glide_Link = "https://github.com/bumptech/glide"
+        private const val Retrofit_Link = "https://github.com/square/retrofit"
+        private const val URL_Project =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
     }

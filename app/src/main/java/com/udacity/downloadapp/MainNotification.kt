@@ -7,10 +7,10 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.udacity.R
 
-fun NotificationManager.sendNoti(mee: String, app: Context) {
+fun NotificationManager.sendNoti(mee: String, app: Context, status: String) {
     val contentIntent = Intent(app, DetailActivity::class.java)
-    contentIntent.putExtra("name",mee)
-    contentIntent.putExtra("status","done")
+    contentIntent.putExtra("name", mee)
+    contentIntent.putExtra("status", status)
     val contentPendingIntent = PendingIntent.getActivity(
         app, 1,
         contentIntent,
