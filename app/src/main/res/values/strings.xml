@@ -11,4 +11,7 @@
     <string name="button_name">Click me</string>
     <string name="button_loading">We are loading </string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="glide_link">https://github.com/bumptech/glide</string>
+    <string name="project_starter_link">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter</string>
+    <string name="retrofit_link">https://github.com/square/retrofit</string>
 </resources>
