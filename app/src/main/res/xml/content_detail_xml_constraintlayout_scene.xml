@@ -3,12 +3,10 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        motion:autoTransition="animateToEnd"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000">
-        <OnClick
-            motion:clickAction="transitionToEnd"
-            motion:targetId="@id/name" />
+        motion:duration="2000">
         <KeyFrameSet></KeyFrameSet>
     </Transition>
 
@@ -21,15 +19,15 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent" />
+            motion:layout_constraintBottom_toTopOf="@id/status"
+            motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
             android:id="@+id/name_download"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             motion:layout_constraintBaseline_toBaselineOf="@id/name"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -41,11 +39,11 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            motion:layout_constraintStart_toStartOf="@id/name"
-            motion:layout_constraintTop_toBottomOf="@id/name_download" />
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="@id/name" />
         <Constraint
             android:id="@+id/status_download"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
@@ -71,13 +69,13 @@
             android:id="@+id/name_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            motion:layout_constraintStart_toEndOf="@id/name"
             motion:layout_constraintBaseline_toBaselineOf="@id/name"
-            motion:layout_constraintEnd_toEndOf="parent" />
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toEndOf="@id/name" />
         <Constraint
             android:id="@+id/status"
             android:layout_width="wrap_content"

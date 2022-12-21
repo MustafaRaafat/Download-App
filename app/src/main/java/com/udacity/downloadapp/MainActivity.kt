@@ -1,6 +1,5 @@
 package com.udacity.downloadapp
 
-import android.animation.ObjectAnimator
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,7 +15,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -30,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var linkToDownload: String
     private var downloadID: Long = 0
+    private lateinit var downloadManager: DownloadManager
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
@@ -39,35 +38,37 @@ class MainActivity : AppCompatActivity() {
     private var selectedFile: Int = 0
 
 
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiver)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(binding.toolbar)
         createChannel("channelId", "download notification")
-
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
         binding.contentMainView.customButton.setOnClickListener {
-//            download()
             when (selectedFile) {
-                0 -> Snackbar.make(
-                    binding.root, "Nothing selected", Snackbar.LENGTH_SHORT
-                ).show()
+                0 -> {
+                    Snackbar.make(
+                        binding.root, "Nothing selected", Snackbar.LENGTH_SHORT
+                    ).show()
+                    binding.contentMainView.customButton.hasDownloadDone()
+                }
                 1 -> download(Glide_Link)
                 2 -> download(URL_Project)
                 3 -> download(Retrofit_Link)
             }
 
         }
-//        var animator = ObjectAnimator.ofArgb(
-//            binding.contentMainView.customButton,
-//            "backgroundColor", Color.BLACK, Color.RED
-//        )
-//        animator.setDuration(500)
-//        animator.repeatCount = 1
-//        animator.repeatMode = ObjectAnimator.REVERSE
-////        animator.disableViewDuringAnimation(colorizeButton)
-//        animator.start()
-
         noti =
             ContextCompat.getSystemService(
                 this,
@@ -78,11 +79,10 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            binding.contentMainView.customButton.hasDownloadDone()
+//            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             val query = DownloadManager.Query()
-            if (query != null) {
-                query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL or DownloadManager.STATUS_FAILED)
-            }
+            query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL or DownloadManager.STATUS_FAILED)
 
             val c = downloadManager.query(query)
             if (c.moveToFirst()) {
@@ -108,23 +108,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun download(link: String) {
+//        binding.contentMainView.customButton.buttonState = ButtonState.Loading
+
         linkToDownload = link
         val request =
             DownloadManager.Request(Uri.parse(link))
-                .setTitle(getString(R.string.app_name))
+                .setTitle(link)
                 .setDescription(getString(R.string.app_description)).setRequiresCharging(false)
                 .setAllowedOverMetered(true).setAllowedOverRoaming(true)
                 .setDestinationInExternalPublicDir(
                     Environment.DIRECTORY_DOWNLOADS,
-                    link
+                    "mustafa"
                 )
-//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
 
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
-        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-//        binding.contentMainView.customButton.setBackgroundColor(Color.YELLOW)
+
     }
 
     companion object {

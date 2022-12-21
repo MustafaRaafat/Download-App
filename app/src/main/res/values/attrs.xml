@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LoadingButton">
-        <attr name="start" format="color"/>
-        <attr name="load" format="color"/>
-        <attr name="complet" format="color"/>
+<!--        <attr name="start" format="color"/>-->
+<!--        <attr name="load" format="color"/>-->
+<!--        <attr name="complet" format="color"/>-->
+<!--        <attr name="buttonColor" format="color"/>-->
+<!--        <attr name="loadingColor" format="color"/>-->
+<!--        <attr name="circleColor" format="color"/>-->
+<!--        <attr name="buttonTextColor" format="color"/>-->
+<!--        <attr name="buttonText" format="string"/>-->
+<!--        <attr name="loadingText" format="string"/>-->
+        <attr name="bgColor" format="integer" />
+        <attr name="textColor" format="color" />
     </declare-styleable>
 </resources>

@@ -50,13 +50,10 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_margin="20dp"
-            app:complet="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-            app:load="@color/colorPrimaryDark"
-            app:start="@color/colorPrimary" />
-
+            app:textColor="@color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
