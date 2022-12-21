@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -58,10 +59,9 @@ class MainActivity : AppCompatActivity() {
         binding.contentMainView.customButton.setOnClickListener {
             when (selectedFile) {
                 0 -> {
-                    Snackbar.make(
-                        binding.root, "Nothing selected", Snackbar.LENGTH_SHORT
-                    ).show()
-                    binding.contentMainView.customButton.hasDownloadDone()
+                    binding.contentMainView.customButton.nothing()
+                    Toast.makeText(this,"Nothing selected",Toast.LENGTH_SHORT).show()
+
                 }
                 1 -> download(Glide_Link)
                 2 -> download(URL_Project)
@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             binding.contentMainView.customButton.hasDownloadDone()
-//            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             val query = DownloadManager.Query()
             query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL or DownloadManager.STATUS_FAILED)
 

@@ -37,7 +37,12 @@ class LoadingButton @JvmOverloads constructor(
         invalidate()
         requestLayout()
     }
-
+    fun nothing() {
+        valueAnimator.cancel()
+        buttonState=ButtonState.Clicked
+        invalidate()
+        requestLayout()
+    }
     fun hasDownloadDone() {
         valueAnimator.cancel()
         buttonState = ButtonState.Completed
@@ -78,7 +83,7 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     private fun anim() {
-        valueAnimator.start()
+        if (buttonState == ButtonState.Loading) valueAnimator.start() else valueAnimator.cancel()
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -96,6 +101,17 @@ class LoadingButton @JvmOverloads constructor(
         if (buttonState == ButtonState.Loading) {
             paint.color = Color.GREEN
             canvas?.drawRect(0f, 0f, (width * (progress / 100)).toFloat(), height.toFloat(), paint)
+            paint.color = Color.YELLOW
+            canvas?.drawArc(
+                widthSize / 2f + 220f,
+                heightSize / 2f - 60f,
+                widthSize / 2f + 300f,
+                heightSize / 2f + 50f,
+                0f,
+                (widthSize*(progress/100)).toFloat(),
+                true,
+                paint
+            )
         }
         val butext = if (buttonState == ButtonState.Loading) "loading..." else "download"
         paint.color = newTextColor
@@ -119,4 +135,6 @@ class LoadingButton @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
     }
+
+
 }
